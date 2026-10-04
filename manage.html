@@ -2,8 +2,8 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>จัดการข้อมูลจัดซื้อพัสดุของ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>จัดการข้อมูลจัดซื้อพัสดุ</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,53 +16,53 @@
 
   <!-- Header -->
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-      <div class="flex items-center space-x-3">
-        <span class="text-2xl">⚙️</span>
+    <div class="max-w-7xl mx-auto px-3 py-2.5 sm:px-4 sm:py-3 flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="text-xl sm:text-2xl">⚙️</span>
         <div>
-          <h1 class="text-lg font-bold leading-tight">จัดการข้อมูลจัดซื้อพัสดุ ของ พี่พีท น้องพอร์ช</h1>
-          <p class="text-xs text-slate-400">ระบบบันทึกคำสั่งซื้อ ตรวจรับ และอัปเดตสถานะ</p>
+          <h1 class="text-sm sm:text-lg font-bold leading-tight">จัดการข้อมูลจัดซื้อ</h1>
+          <p class="text-[10px] sm:text-xs text-slate-400">บันทึกคำสั่งซื้อ ตรวจรับ และอัปเดตสถานะ</p>
         </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <a href="index.html" class="px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
-          📅 ปฏิทินงาน
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <a href="index.html" class="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          📅 ปฏิทิน
         </a>
-        <a href="manage.html" class="px-3.5 py-1.5 rounded-lg text-sm font-medium bg-blue-600 text-white shadow-sm">
-          ⚙️ จัดการข้อมูล / เปิด PO
+        <a href="manage.html" class="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium bg-blue-600 text-white shadow-sm">
+          ⚙️ จัดการ / เปิด PO
         </a>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
+  <main class="max-w-7xl mx-auto px-2 sm:px-4 py-4 space-y-3 sm:space-y-4">
     <!-- Toolbar -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-3">
-      <button onclick="openNewPOModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm shadow-sm transition flex items-center space-x-2">
+    <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <button onclick="openNewPOModal()" class="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-xs sm:text-sm shadow-sm transition flex items-center justify-center space-x-2">
         <span>+</span> <span>เปิดคำสั่งซื้อใหม่ (PO)</span>
       </button>
 
       <div class="w-full sm:w-72">
-        <input type="text" id="searchInput" oninput="filterData()" placeholder="ค้นหารหัสสินค้า, รายการ..." class="w-full border border-slate-300 px-3 py-1.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="searchInput" oninput="filterData()" placeholder="ค้นหารหัสสินค้า, รายการ..." class="w-full border border-slate-300 px-3 py-1.5 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
       </div>
     </div>
 
     <!-- ตารางข้อมูล -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-      <table class="min-w-full text-left text-sm text-slate-600">
-        <thead class="bg-slate-50 text-slate-700 uppercase font-semibold text-xs border-b border-slate-200">
+      <table class="min-w-full text-left text-xs sm:text-sm text-slate-600">
+        <thead class="bg-slate-50 text-slate-700 uppercase font-semibold text-[11px] sm:text-xs border-b border-slate-200">
           <tr>
-            <th class="px-4 py-3 text-center">ลำดับ</th>
-            <th class="px-4 py-3">รหัสพัสดุ</th>
-            <th class="px-4 py-3">รายการสินค้า</th>
-            <th class="px-4 py-3 text-right">จำนวน</th>
-            <th class="px-4 py-3 text-right">ราคา</th>
-            <th class="px-4 py-3 text-center">วันเปิด PO</th>
-            <th class="px-4 py-3 text-center">วัน AP</th>
-            <th class="px-4 py-3 text-center">กำหนดส่ง</th>
-            <th class="px-4 py-3 text-center">วันส่งจริง</th>
-            <th class="px-4 py-3 text-center">สถานะ</th>
-            <th class="px-4 py-3 text-center">การปฏิบัติการ</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">ลำดับ</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3">รหัสพัสดุ</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3">รายการสินค้า</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-right">จำนวน</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-right">ราคา</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">วันเปิด PO</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">วัน AP</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">กำหนดส่ง</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">วันส่งจริง</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">สถานะ</th>
+            <th class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">การปฏิบัติการ</th>
           </tr>
         </thead>
         <tbody id="tableBody" class="divide-y divide-slate-100">
@@ -72,15 +72,15 @@
     </div>
   </main>
 
-  <!-- MODAL 1: เปิด PO ใหม่ (เอาช่องกำหนดส่งออกแล้ว) -->
-  <div id="newPOModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+  <!-- MODAL 1: เปิด PO ใหม่ -->
+  <div id="newPOModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-3">
     <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden">
-      <div class="px-6 py-4 bg-slate-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-base">เปิดคำสั่งซื้อพัสดุใหม่ (New PO)</h3>
-        <button onclick="closeModal('newPOModal')" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      <div class="px-4 py-3 sm:px-6 sm:py-4 bg-slate-900 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm sm:text-base">เปิดคำสั่งซื้อพัสดุใหม่ (New PO)</h3>
+        <button onclick="closeModal('newPOModal')" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
       </div>
-      <form id="poForm" onsubmit="submitNewPO(event)" class="p-6 space-y-3.5 text-sm">
-        <div class="grid grid-cols-2 gap-3">
+      <form id="poForm" onsubmit="submitNewPO(event)" class="p-4 sm:p-6 space-y-3 text-xs sm:text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-slate-700 font-medium mb-1">รหัสสินค้า / เลข PO</label>
             <input type="text" name="itemCode" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
@@ -98,12 +98,12 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-700 font-medium mb-1">จำนวน</label>
-            <input type="number" name="qty" required min="1" value="1" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            <label class="block text-slate-700 font-medium mb-1">จำนวน (ชิ้น)</label>
+            <input type="number" name="qty" required min="1" value="1" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 font-semibold">
           </div>
           <div>
             <label class="block text-slate-700 font-medium mb-1">ราคารวม (บาท)</label>
-            <input type="number" name="price" required step="0.01" min="0" placeholder="0.00" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            <input type="number" name="price" required step="0.01" min="0" placeholder="0.00" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 font-semibold">
           </div>
         </div>
 
@@ -112,27 +112,27 @@
           <textarea name="note" rows="2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
 
-        <div class="flex justify-end space-x-2 pt-3 border-t">
-          <button type="button" onclick="closeModal('newPOModal')" class="px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">ยกเลิก</button>
-          <button type="submit" id="btnSubmitPO" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">บันทึกเปิด PO</button>
+        <div class="flex justify-end space-x-2 pt-2 border-t">
+          <button type="button" onclick="closeModal('newPOModal')" class="px-3 py-1.5 sm:px-4 sm:py-2 border rounded-lg text-slate-600 hover:bg-slate-50">ยกเลิก</button>
+          <button type="submit" id="btnSubmitPO" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">บันทึกเปิด PO</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: บันทึกอนุมัติ AP พร้อมระบุกำหนดส่งสินค้า -->
-  <div id="apModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+  <!-- MODAL 2: บันทึกอนุมัติ AP พร้อมกำหนดส่ง -->
+  <div id="apModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-3">
     <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-      <div class="px-6 py-4 bg-blue-700 text-white flex justify-between items-center">
-        <h3 class="font-bold text-base">อนุมัติ AP / กำหนดการส่งสินค้า</h3>
-        <button onclick="closeModal('apModal')" class="text-white text-xl">&times;</button>
+      <div class="px-4 py-3 bg-blue-700 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm sm:text-base">อนุมัติ AP / กำหนดการส่งสินค้า</h3>
+        <button onclick="closeModal('apModal')" class="text-white text-xl leading-none">&times;</button>
       </div>
-      <form id="apForm" onsubmit="submitApproveAP(event)" class="p-6 space-y-4 text-sm">
+      <form id="apForm" onsubmit="submitApproveAP(event)" class="p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
         <input type="hidden" id="apRowIndex">
         
         <div>
-          <span class="text-xs text-slate-500 block mb-1">รายการสินค้า:</span>
-          <p class="font-semibold text-slate-800" id="apItemName">-</p>
+          <span class="text-slate-500 block mb-0.5">รายการสินค้า:</span>
+          <p class="font-semibold text-slate-800 text-sm" id="apItemName">-</p>
         </div>
 
         <div>
@@ -143,12 +143,12 @@
         <div>
           <label class="block text-slate-700 font-medium mb-1">กำหนดการส่งสินค้า (Target Date) <span class="text-rose-500">*</span></label>
           <input type="date" id="apTargetDateInput" required class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-          <p class="text-[11px] text-slate-500 mt-1">วันที่นี้จะถูกนำไปปักหมุดบนปฏิทินงาน</p>
+          <p class="text-[10px] text-slate-500 mt-1">วันที่นี้จะถูกนำไปปักหมุดบนปฏิทินงาน</p>
         </div>
 
-        <div class="flex justify-end space-x-2 pt-3 border-t">
-          <button type="button" onclick="closeModal('apModal')" class="px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">ยกเลิก</button>
-          <button type="submit" id="btnSubmitAP" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">บันทึกอนุมัติ AP</button>
+        <div class="flex justify-end space-x-2 pt-2 border-t">
+          <button type="button" onclick="closeModal('apModal')" class="px-3 py-1.5 border rounded-lg text-slate-600 hover:bg-slate-50">ยกเลิก</button>
+          <button type="submit" id="btnSubmitAP" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">บันทึกอนุมัติ AP</button>
         </div>
       </form>
     </div>
@@ -197,32 +197,32 @@
         if (item.colorCode === 'green')  badgeStyle = "bg-green-100 text-green-800 border border-green-200";
         if (item.colorCode === 'black')  badgeStyle = "bg-slate-200 text-slate-600 line-through";
 
-        let actionsHtml = `<div class="flex items-center justify-center space-x-1">`;
+        let actionsHtml = `<div class="flex items-center justify-center space-x-1 whitespace-nowrap">`;
         if (!item.apDate && item.colorCode !== 'black') {
-          actionsHtml += `<button onclick='openAPModal(${item.rowIndex}, "${item.itemName}")' class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-xs font-semibold">อนุมัติ AP</button>`;
+          actionsHtml += `<button onclick='openAPModal(${item.rowIndex}, "${item.itemName}")' class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold">อนุมัติ AP</button>`;
         }
         if (item.apDate && !item.actualDate && item.colorCode !== 'black') {
-          actionsHtml += `<button onclick="doConfirmRecv(${item.rowIndex})" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold shadow-sm">✓ รับของแล้ว</button>`;
+          actionsHtml += `<button onclick="doConfirmRecv(${item.rowIndex})" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-semibold shadow-sm">✓ รับของแล้ว</button>`;
         }
         if (item.colorCode !== 'black' && !item.actualDate) {
-          actionsHtml += `<button onclick="doCancel(${item.rowIndex})" class="px-2 py-1 text-rose-600 hover:bg-rose-50 rounded text-xs">ยกเลิก</button>`;
+          actionsHtml += `<button onclick="doCancel(${item.rowIndex})" class="px-1.5 py-1 text-rose-600 hover:bg-rose-50 rounded text-[11px]">ยกเลิก</button>`;
         }
         actionsHtml += `</div>`;
 
         tr.innerHTML = `
-          <td class="px-4 py-3 text-center text-xs text-slate-500">${item.id}</td>
-          <td class="px-4 py-3 font-semibold text-slate-700 text-xs">${item.itemCode}</td>
-          <td class="px-4 py-3 text-slate-800 font-medium">${item.itemName}</td>
-          <td class="px-4 py-3 text-right">${Number(item.qty).toLocaleString()}</td>
-          <td class="px-4 py-3 text-right">${Number(item.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-          <td class="px-4 py-3 text-center text-xs text-slate-500">${item.poDate || '-'}</td>
-          <td class="px-4 py-3 text-center text-xs text-slate-500">${item.apDate || '-'}</td>
-          <td class="px-4 py-3 text-center text-xs font-semibold text-slate-700">${item.targetDate || '-'}</td>
-          <td class="px-4 py-3 text-center text-xs font-semibold text-green-600">${item.actualDate || '-'}</td>
-          <td class="px-4 py-3 text-center">
-            <span class="px-2 py-0.5 rounded-full text-xs font-medium ${badgeStyle}">${item.statusText}</span>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center text-slate-500">${item.id}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 font-semibold text-slate-700">${item.itemCode}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-slate-800 font-medium">${item.itemName}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-right font-semibold text-blue-600">${Number(item.qty).toLocaleString()}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-right font-medium">${Number(item.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center text-slate-500">${item.poDate || '-'}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center text-slate-500">${item.apDate || '-'}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center font-semibold text-slate-700">${item.targetDate || '-'}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center font-semibold text-green-600">${item.actualDate || '-'}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">
+            <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap ${badgeStyle}">${item.statusText}</span>
           </td>
-          <td class="px-4 py-3 text-center">${actionsHtml}</td>
+          <td class="px-3 py-2.5 sm:px-4 sm:py-3 text-center">${actionsHtml}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -261,7 +261,7 @@
           itemName: form.itemName.value,
           qty: form.qty.value,
           price: form.price.value,
-          targetDate: "", // ยังไม่มีกำหนดส่งในขั้นตอนนี้
+          targetDate: "",
           note: form.note.value
         }
       };
