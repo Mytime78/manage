@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ปฏิทินติดตามงานจัดซื้อพัสดุ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Sarabun', sans-serif; }
+    /* การ์ดสีสถานะต่างๆ */
+    .card-yellow { background-color: #fefcbf; border-left: 4px solid #d69e2e; color: #744210; }
+    .card-blue   { background-color: #ebf8ff; border-left: 4px solid #3182ce; color: #2b6cb0; }
+    .card-orange { background-color: #feebc8; border-left: 4px solid #dd6b20; color: #7b341e; }
+    .card-red    { background-color: #fed7d7; border-left: 4px solid #e53e3e; color: #9b2c2c; }
+    .card-brown  { background-color: #fef3c7; border-left: 4px solid #92400e; color: #78350f; }
+    .card-green  { background-color: #c6f6d5; border-left: 4px solid #38a169; color: #22543d; }
+    .card-black  { background-color: #edf2f7; border-left: 4px solid #4a5568; color: #4a5568; opacity: 0.6; }
+    
+    /* สไตล์กรอบไฮไลต์วันปัจจุบัน (Today Highlight) แบบในตัวอย่าง */
+    .cell-today {
+      border: 2px solid #2563eb !important;
+      background-color: #eff6ff !important;
+      position: relative;
+      z-index: 10;
+    }
+    .badge-today {
+      background-color: #2563eb;
+      color: #ffffff;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800">
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">📦</span>
+        <div>
+          <h1 class="text-lg font-bold leading-tight">ระบบติดตามงานจัดซื้อพัสดุ</h1>
+          <p class="text-xs text-slate-400">มุมมองปฏิทินกำหนดส่งและการตรวจรับ</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <a href="index.html" class="px-3.5 py-1.5 rounded-lg text-sm font-medium bg-blue-600 text-white shadow-sm">
+          📅 ปฏิทินงาน
+        </a>
+        <a href="manage.html" class="px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          ⚙️ จัดการข้อมูล / เปิด PO
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
+    <!-- ควบคุมเดือน & คำอธิบายสี -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-2">
+        <button onclick="prevMonth()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition">◀ เดือนก่อนหน้า</button>
+        <h2 id="monthYearTitle" class="text-lg font-bold text-slate-800 px-3 text-center min-w-[180px]">กำลังโหลด...</h2>
+        <button onclick="nextMonth()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition">เดือนถัดไป ▶</button>
+      </div>
+
+      <!-- แถบสีคำอธิบายสถานะ -->
+      <div class="flex flex-wrap gap-1.5 text-xs">
+        <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-300">🟡 รออนุมัติ PO</span>
+        <span class="px-2 py-1 rounded bg-blue-100 text-blue-800 border border-blue-300">🔵 อนุมัติ AP (รอส่ง)</span>
+        <span class="px-2 py-1 rounded bg-orange-100 text-orange-800 border border-orange-300">🟠 ใกล้ส่งมอบ (≤ 2 วัน)</span>
+        <span class="px-2 py-1 rounded bg-red-100 text-red-800 border border-red-300 font-bold">🔴 กำหนดส่ง (วันนี้)</span>
+        <span class="px-2 py-1 rounded bg-amber-100 text-amber-900 border border-amber-400 font-medium">🟤 เลยกำหนดส่ง</span>
+        <span class="px-2 py-1 rounded bg-green-100 text-green-800 border border-green-300">🟢 รับของแล้ว</span>
+        <span class="px-2 py-1 rounded bg-gray-200 text-gray-700 border border-gray-300">⚫ ยกเลิก</span>
+      </div>
+    </div>
+
+    <!-- ตารางปฏิทิน -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="grid grid-cols-7 bg-slate-100 text-center font-bold text-slate-700 text-sm py-2.5 border-b border-slate-200">
+        <div class="text-rose-600">อา.</div>
+        <div>จ.</div>
+        <div>อ.</div>
+        <div>พ.</div>
+        <div>พฤ.</div>
+        <div>ศ.</div>
+        <div class="text-blue-600">ส.</div>
+      </div>
+      <div id="calendarGrid" class="grid grid-cols-7 auto-rows-fr gap-px bg-slate-200"></div>
+    </div>
+  </main>
+
+  <!-- Modal ดูรายละเอียด (Read-only) -->
+  <div id="viewModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+      <div class="px-5 py-3.5 bg-slate-800 text-white flex justify-between items-center">
+        <h3 class="font-bold text-base">รายละเอียดคำสั่งซื้อ</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl">&times;</button>
+      </div>
+      <div class="p-5 space-y-2.5 text-sm">
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">รหัสสินค้า / PO:</span>
+          <span class="font-semibold text-slate-800" id="mCode">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">รายการสินค้า:</span>
+          <span class="font-semibold text-slate-800 text-right" id="mName">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">จำนวน / ราคา:</span>
+          <span class="font-semibold text-slate-800" id="mQtyPrice">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">วันเปิด PO:</span>
+          <span class="text-slate-700" id="mPoDate">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">วัน AP (ชำระเงิน):</span>
+          <span class="text-slate-700" id="mApDate">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">กำหนดส่งสินค้า:</span>
+          <span class="text-slate-700 font-bold" id="mTargetDate">-</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span class="text-slate-500">วันส่งของจริง:</span>
+          <span class="text-slate-700 font-medium" id="mActualDate">-</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block">หมายเหตุ:</span>
+          <p class="text-slate-700 mt-1 text-xs bg-slate-50 p-2 rounded" id="mNote">-</p>
+        </div>
+        <div class="pt-3">
+          <button onclick="closeModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">ปิดหน้าต่าง</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzTuccjIJJmI7D3Nn5dpz7hu1tpuV6n5jSkqli3bz5wX2ZqMOgRekbjYualXvzPJkoX/exec";
+    let procurementItems = [];
+    let currentViewDate = new Date();
+
+    const monthsTh = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+
+    window.onload = fetchCalendarData;
+
+    function fetchCalendarData() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(res => {
+          if (res.success) {
+            procurementItems = res.data;
+            renderCalendar();
+          } else {
+            alert("ดึงข้อมูลไม่สำเร็จ: " + res.message);
+          }
+        })
+        .catch(err => alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API"));
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
+
+      const y = currentViewDate.getFullYear();
+      const m = currentViewDate.getMonth();
+      document.getElementById('monthYearTitle').innerText = `${monthsTh[m]} ${y + 543}`;
+
+      // วันที่ปัจจุบันจริง สำหรับเทียบทำกรอบไฮไลต์
+      const now = new Date();
+      const todayYear = now.getFullYear();
+      const todayMonth = now.getMonth();
+      const todayDate = now.getDate();
+
+      const firstDayIndex = new Date(y, m, 1).getDay();
+      const lastDay = new Date(y, m + 1, 0).getDate();
+
+      // สร้างช่องว่างก่อนวันที่ 1
+      for (let i = 0; i < firstDayIndex; i++) {
+        const empty = document.createElement('div');
+        empty.className = "bg-slate-50 min-h-[115px] p-1 border-r border-b border-slate-200";
+        grid.appendChild(empty);
+      }
+
+      // วนลูปสร้างแต่ละวัน
+      for (let d = 1; d <= lastDay; d++) {
+        const isToday = (y === todayYear && m === todayMonth && d === todayDate);
+        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        
+        const cell = document.createElement('div');
+        cell.className = `bg-white min-h-[115px] p-1.5 border-r border-b border-slate-200 flex flex-col justify-start transition ${isToday ? 'cell-today rounded-md shadow-sm' : ''}`;
+
+        // ส่วนแสดงตัวเลขวันที่ (ถ้าเป็นวันนี้จะมี Badge วงกลมสีน้ำเงิน)
+        const headerDiv = document.createElement('div');
+        headerDiv.className = "flex justify-between items-center mb-1";
+        
+        const numSpan = document.createElement('span');
+        numSpan.className = `text-xs ${isToday ? 'badge-today' : 'font-semibold text-slate-500'}`;
+        numSpan.innerText = isToday ? `${d} (วันนี้)` : d;
+        headerDiv.appendChild(numSpan);
+        cell.appendChild(headerDiv);
+
+        // ตรรกะปักหมุดการ์ด:
+        // ถ้าผ่าน AP แล้ว ปักตามกำหนดส่ง (targetDate)
+        // ถ้ายังไม่ผ่าน AP ปักตามวันเปิด PO (poDate)
+        const matched = procurementItems.filter(item => {
+          if (item.apDate && item.targetDate) {
+            const cleanTarget = item.targetDate.split('T')[0].trim();
+            return cleanTarget === dateStr;
+          } else if (!item.apDate && item.poDate) {
+            const cleanPO = item.poDate.split('T')[0].trim();
+            return cleanPO === dateStr;
+          }
+          return false;
+        });
+
+        matched.forEach(item => {
+          const card = document.createElement('div');
+          card.className = `p-1.5 mb-1.5 rounded text-xs cursor-pointer shadow-sm transition hover:shadow-md card-${item.colorCode}`;
+
+          // กำหนดไอคอนแสดงประเภทงาน
+          let iconPrefix = "📝"; // ยังไม่ผ่าน AP (แบบฟอร์มขอซื้อ)
+          if (item.apDate) {
+            iconPrefix = (item.actualDate) ? "📦" : "🚚"; // ถ้ามีกำหนดส่งใช้รูปรถบรรทุก ถ้าตรวจรับแล้วใช้กล่องพัสดุ
+          }
+
+          card.innerHTML = `
+            <div class="font-bold truncate flex items-center gap-1" title="${item.itemName}">
+              <span>${iconPrefix}</span>
+              <span class="truncate">${item.itemName}</span>
+            </div>
+            <div class="text-[10px] mt-0.5 font-medium truncate">${item.statusText}</div>
+          `;
+          card.onclick = () => openDetail(item);
+          cell.appendChild(card);
+        });
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function prevMonth() {
+      currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+      renderCalendar();
+    }
+    function nextMonth() {
+      currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+      renderCalendar();
+    }
+
+    function openDetail(item) {
+      document.getElementById('mCode').innerText = item.itemCode || '-';
+      document.getElementById('mName').innerText = item.itemName || '-';
+      document.getElementById('mQtyPrice').innerText = `${Number(item.qty).toLocaleString()} ชิ้น / ${Number(item.price).toLocaleString()} บาท`;
+      document.getElementById('mPoDate').innerText = item.poDate || '-';
+      document.getElementById('mApDate').innerText = item.apDate || 'ยังไม่อนุมัติ';
+      document.getElementById('mTargetDate').innerText = item.targetDate || 'ยังไม่กำหนด (รอ AP)';
+      document.getElementById('mActualDate').innerText = item.actualDate || 'ยังไม่ได้รับสินค้า';
+      document.getElementById('mNote').innerText = item.note || '-';
+      document.getElementById('viewModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('viewModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
